@@ -88,10 +88,42 @@ List *get_adj_nodes(Node *n) {
   return list;
 }
 
-int is_final(Node *n) { return 0; }
+int is_final(Node *n) {
+  for (int i = 0; i < 9; i++) {
+    for (int j = 0; j < 9; j++) {
+      if (n->sudo[i][j] == 0) {
+        return 0;
+      }
+    }
+  }
+  return 1;
+}
 
-Node *DFS(Node *initial, int *cont) { return NULL; }
+Node *DFS(Node *initial, int *cont) {
+  if (!initial)
+    return NULL;
 
+  Stack *stack = createStack();
+  push(stack, initial);
+  while (top(stack) != NULL) {
+    Node *current = top(stack);
+    pop(stack);
+    (*cont)++;
+
+    if (is_final(current)) {
+      return current;
+    }
+    List *adjNodes = get_adj_nodes(current);
+    Node *adjNode = first(adjNodes);
+    while (adjNode != NULL) {
+      push(stack, adjNode);
+      adjNode = next(adjNodes);
+    }
+    free(current);
+  }
+
+  return NULL;
+}
 /*
 int main( int argc, char *argv[] ){
 
